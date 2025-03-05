@@ -125,6 +125,13 @@ fn main() {
 
     check_ssl_kind();
 
+    if env::var_os("CARGO_CFG_MIRI").is_some() {
+        // When running under Miri, we don't need the compiled
+        // library, so skip any finding or building we might otherwise
+        // do.
+        return;
+    }
+
     let target = env::var("TARGET").unwrap();
 
     let (lib_dirs, include_dir) = find_openssl(&target);
